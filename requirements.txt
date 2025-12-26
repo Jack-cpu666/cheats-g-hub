@@ -1,0 +1,8 @@
+numpy
+opencv-python
+mss
+pynput
+flask
+requests
+cryptography
+stripe

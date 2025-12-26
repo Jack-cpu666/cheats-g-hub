@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f0f1a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 10px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .error-text {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        /* Header */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title span {
+            font-size: 20px;
+        }
+
+        /* Create Form */
+        .create-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 16px;
+            align-items: end;
+        }
+
+        @media (max-width: 640px) {
+            .create-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 0 -24px;
+            padding: 0 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .key-code {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            color: var(--primary-light);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        .status-suspended {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        .status-expired {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 16px;
+                border-radius: 16px;
+            }
+
+            .login-box {
+                padding: 32px 24px;
+            }
+
+            th,
+            td {
+                padding: 12px 8px;
+            }
+
+            .key-code {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .btn-icon {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 16px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hwid-icon {
+            font-size: 14px;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-icon">🔐</div>
+            <h1 class="login-title">Admin Access</h1>
+            <p class="login-subtitle">Enter your password to continue</p>
+            <input type="password" id="password" placeholder="Enter password..." autofocus>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="login()">
+                Login
+            </button>
+            <div id="loginError" class="error-text"></div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="hidden">
+        <div class="container">
+            <header>
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">🛡️</div>
+                        <span class="logo-text">License Manager</span>
+                    </div>
+                    <button class="btn btn-ghost" onclick="logout()">
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Total Keys</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statActive">0</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statSuspended">0</div>
+                    <div class="stat-label">Suspended</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statExpired">0</div>
+                    <div class="stat-label">Expired</div>
+                </div>
+            </div>
+
+            <!-- Create Key -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><span>✨</span> Create New Key</h2>
+                </div>
+                <div class="create-form">
+                    <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        <select id="newDuration">
+                            <option value="1">1 Day</option>
+                            <option value="7">7 Days</option>
+                            <option value="30" selected>30 Days</option>
+                            <option value="90">90 Days</option>
+                            <option value="365">1 Year</option>
+                            <option value="36500">Lifetime ♾️</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Customer / Notes</label>
+                        <input type="text" id="newNotes" placeholder="Optional...">
+                    </div>
+                    <button class="btn btn-success" id="createBtn" onclick="createKey()">
+                        <span>➕</span> Create
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transfer Code Generator -->
+            <div class="card"
+                style="border: 1px solid rgba(139, 92, 246, 0.3); background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), var(--bg-glass));">
+                <div class="card-header">
+                    <h2 class="card-title"><span>🎁</span> Transfer Code Generator</h2>
+                    <span
+                        style="font-size: 12px; color: var(--text-muted); background: rgba(139, 92, 246, 0.2); padding: 4px 12px; border-radius: 20px;">Give
+                        Free Access</span>
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+                    Generate transfer codes to give anyone free access for any duration. Just copy and share!
+                </p>
+                <div class="create-form" style="grid-template-columns: 100px 1fr auto auto;">
+                    <div class="form-group">
+                        <label class="form-label">Days</label>
+                        <input type="number" id="transferDays" value="30" min="1" max="36500"
+                            style="text-align: center;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Recipient Notes (optional)</label>
+                        <input type="text" id="transferNotes" placeholder="e.g., Giveaway Winner, Friend...">
+                    </div>
+                    <button class="btn btn-primary" id="generateTransferBtn" onclick="generateTransferCode()"
+                        style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <span>🎲</span> Generate
+                    </button>
+                    <button class="btn btn-ghost" onclick="generateBulkTransferCodes(10)" title="Generate 10 codes">
+                        <span>📦</span> Bulk (10)
+                    </button>
+                </div>
+
+                <!-- Generated Transfer Codes List -->
+                <div id="transferCodesList" style="margin-top: 24px; display: none;">
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="font-weight: 600; font-size: 14px; color: var(--text-muted);">Generated
+                            Codes</span>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-primary btn-sm" onclick="copyAllTransferCodes()"
+                                style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                📋 Copy All
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="clearTransferCodes()">Clear All</button>
+                        </div>
+                    </div>
+                    <div id="transferCodesBody" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+            </div>
+
+            <!-- Keys List -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><span>📋</span> All Keys</h2>
+                    <button class="btn btn-ghost btn-sm" onclick="loadKeys()">
+                        🔄 Refresh
+                    </button>
+                </div>
+                <div id="loadingState" style="text-align: center; padding: 40px;">
+                    <div class="spinner" style="margin: 0 auto;"></div>
+                </div>
+                <div id="keysContent" class="hidden">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>License Key</th>
+                                    <th>Status</th>
+                                    <th>Expires</th>
+                                    <th>Notes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="keysBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG
+        const ADMIN_PASSWORD = "AEae123@";
+        const SUPABASE_URL = "https://tlmlbcjiheckhmczzjtq.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRsbWxiY2ppaGVja2htY3p6anRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NjI3MjU4MywiZXhwIjoyMDgxODQ4NTgzfQ._73uwkgHadansQQ3yprO4CXL_9J6m1b0ceSUOgxzKIU";
+        const API_URL = `${SUPABASE_URL}/rest/v1/keys`;
+
+        let keysData = [];
+
+        const headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+        };
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Login
+        function login() {
+            if (document.getElementById("password").value === ADMIN_PASSWORD) {
+                document.getElementById("loginScreen").classList.add("hidden");
+                document.getElementById("adminPanel").classList.remove("hidden");
+                loadKeys();
+            } else {
+                document.getElementById("loginError").textContent = "Invalid password";
+                document.getElementById("password").style.borderColor = 'var(--danger)';
+            }
+        }
+
+        function logout() { location.reload(); }
+
+        // Load keys
+        async function loadKeys() {
+            document.getElementById("loadingState").classList.remove("hidden");
+            document.getElementById("keysContent").classList.add("hidden");
+
+            try {
+                const r = await fetch(API_URL + "?select=*", { headers });
+                keysData = await r.json();
+                if (!Array.isArray(keysData)) keysData = [];
+            } catch (e) {
+                console.error(e);
+                keysData = [];
+            }
+
+            document.getElementById("loadingState").classList.add("hidden");
+            document.getElementById("keysContent").classList.remove("hidden");
+            renderKeys();
+        }
+
+        // Generate key
+        function genKey() {
+            const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let k = "";
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) k += c[Math.floor(Math.random() * c.length)];
+                if (i < 3) k += "-";
+            }
+            return k;
+        }
+
+        // Create key
+        async function createKey() {
+            const btn = document.getElementById("createBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>';
+
+            const days = parseInt(document.getElementById("newDuration").value);
+            const notes = document.getElementById("newNotes").value;
+
+            const newKey = {
+                key: genKey(),
+                created: Date.now(),
+                expires: Date.now() + days * 86400000,
+                notes: notes,
+                status: "active",
+                hwid: ""
+            };
+
+            try {
+                await fetch(API_URL, { method: "POST", headers, body: JSON.stringify(newKey) });
+                await loadKeys();
+                document.getElementById("newNotes").value = "";
+                showToast(`Key created: ${newKey.key}`);
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(newKey.key);
+            } catch (e) {
+                showToast("Error creating key", "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<span>➕</span> Create';
+        }
+
+        // Delete key
+        async function deleteKey(k) {
+            if (!confirm("Delete this key?")) return;
+            await fetch(API_URL + `?key=eq.${k}`, { method: "DELETE", headers });
+            showToast("Key deleted");
+            loadKeys();
+        }
+
+        // Update key
+        async function updateKey(k, updates) {
+            await fetch(API_URL + `?key=eq.${k}`, {
+                method: "PATCH",
+                headers,
+                body: JSON.stringify(updates)
+            });
+            loadKeys();
+        }
+
+        async function toggleSuspend(k) {
+            const key = keysData.find(x => x.key === k);
+            if (key) {
+                const newStatus = key.status === "suspended" ? "active" : "suspended";
+                await updateKey(k, { status: newStatus });
+                showToast(newStatus === "suspended" ? "Key suspended" : "Key activated");
+            }
+        }
+
+        async function extendKey(k) {
+            const d = prompt("Add how many days?", "30");
+            if (!d || isNaN(d)) return;
+            const key = keysData.find(x => x.key === k);
+            if (key) {
+                await updateKey(k, { expires: key.expires + parseInt(d) * 86400000 });
+                showToast(`Extended by ${d} days`);
+            }
+        }
+
+        async function reduceKey(k) {
+            const d = prompt("Remove how many days?", "7");
+            if (!d || isNaN(d)) return;
+            const key = keysData.find(x => x.key === k);
+            if (key) {
+                await updateKey(k, { expires: key.expires - parseInt(d) * 86400000 });
+                showToast(`Reduced by ${d} days`);
+            }
+        }
+
+        async function resetHwid(k) {
+            if (!confirm("Reset HWID? User can activate on a new PC.")) return;
+            await updateKey(k, { hwid: "" });
+            showToast("HWID reset");
+        }
+
+        function copyKey(k) {
+            navigator.clipboard.writeText(k);
+            showToast("Key copied!");
+        }
+
+        // ============================================
+        // TRANSFER CODE GENERATOR
+        // ============================================
+        let generatedTransferCodes = [];
+
+        // Generate a transfer code in format TRANSFER:XXXXXX
+        function genTransferCode() {
+            const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // No confusing chars like 0/O, 1/I
+            let code = "TRANSFER:";
+            for (let i = 0; i < 6; i++) {
+                code += c[Math.floor(Math.random() * c.length)];
+            }
+            return code;
+        }
+
+        // Generate a single transfer code
+        async function generateTransferCode() {
+            const btn = document.getElementById("generateTransferBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>';
+
+            const days = parseInt(document.getElementById("transferDays").value) || 30;
+            const notes = document.getElementById("transferNotes").value || "Transfer Code";
+
+            // Generate BOTH a license key and a transfer code
+            const licenseKey = genKey();
+            const transferCode = genTransferCode();
+
+            const newKey = {
+                key: licenseKey,
+                created: Date.now(),
+                expires: Date.now() + days * 86400000,
+                notes: notes,
+                status: "active",
+                hwid: transferCode  // Store transfer code in HWID field
+            };
+
+            try {
+                await fetch(API_URL, { method: "POST", headers, body: JSON.stringify(newKey) });
+
+                // Add to generated list - show TRANSFER CODE (not license key)
+                generatedTransferCodes.unshift({
+                    transferCode: transferCode,  // This is what you share
+                    licenseKey: licenseKey,      // For reference
+                    days: days,
+                    notes: notes
+                });
+
+                renderTransferCodes();
+
+                // Auto copy TRANSFER CODE to clipboard (this is what you share)
+                navigator.clipboard.writeText(transferCode);
+                showToast(`Transfer code created & copied: ${transferCode}`);
+
+                // Refresh keys list
+                loadKeys();
+            } catch (e) {
+                showToast("Error creating transfer code", "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<span>🎲</span> Generate';
+        }
+
+        // Generate bulk transfer codes (default 10)
+        async function generateBulkTransferCodes(count = 10) {
+            const days = parseInt(document.getElementById("transferDays").value) || 30;
+            const notes = document.getElementById("transferNotes").value || "";
+
+            showToast(`Generating ${count} codes...`);
+
+            for (let i = 0; i < count; i++) {
+                const licenseKey = genKey();
+                const transferCode = genTransferCode();
+
+                const newKey = {
+                    key: licenseKey,
+                    created: Date.now(),
+                    expires: Date.now() + days * 86400000,
+                    notes: notes,
+                    status: "active",
+                    hwid: transferCode  // Store transfer code in HWID
+                };
+
+                try {
+                    await fetch(API_URL, { method: "POST", headers, body: JSON.stringify(newKey) });
+                    generatedTransferCodes.unshift({
+                        transferCode: transferCode,
+                        licenseKey: licenseKey,
+                        days: days,
+                        notes: notes
+                    });
+                } catch (e) {
+                    console.error("Error creating bulk code", e);
+                }
+            }
+
+            renderTransferCodes();
+            loadKeys();
+            showToast(`${count} transfer codes created!`);
+        }
+
+        // Render generated transfer codes
+        function renderTransferCodes() {
+            const container = document.getElementById("transferCodesList");
+            const body = document.getElementById("transferCodesBody");
+
+            if (generatedTransferCodes.length === 0) {
+                container.style.display = "none";
+                return;
+            }
+
+            container.style.display = "block";
+            body.innerHTML = generatedTransferCodes.map((code, i) => {
+                // Display only the code part (after TRANSFER:)
+                const displayCode = code.transferCode.replace('TRANSFER:', '');
+                return `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 12px;">
+                    <div style="flex: 1;">
+                        <div style="font-family: monospace; font-size: 18px; color: #a78bfa; font-weight: 700; letter-spacing: 2px;">${displayCode}</div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">License: ${code.licenseKey}</div>
+                    </div>
+                    <span style="font-size: 12px; color: var(--text-muted); background: rgba(139, 92, 246, 0.2); padding: 4px 8px; border-radius: 6px;">${code.days} days</span>
+                    <button class="btn btn-ghost btn-sm" onclick="copyTransferCode('${displayCode}')" style="padding: 6px 12px;">
+                        📋 Copy
+                    </button>
+                </div>
+            `}).join("");
+        }
+
+        function copyTransferCode(code) {
+            navigator.clipboard.writeText(code);
+            showToast("Transfer code copied! 🎁");
+        }
+
+        // Copy all transfer codes in a nice format
+        function copyAllTransferCodes() {
+            if (generatedTransferCodes.length === 0) {
+                showToast("No codes to copy", "error");
+                return;
+            }
+
+            const days = generatedTransferCodes[0]?.days || 30;
+            let text = `🎁 TRANSFER CODES (${days} Days Each)\n`;
+            text += `${'─'.repeat(30)}\n\n`;
+
+            generatedTransferCodes.forEach((code, i) => {
+                const displayCode = code.transferCode.replace('TRANSFER:', '');
+                text += `${(i + 1).toString().padStart(2, '0')}. ${displayCode}\n`;
+            });
+
+            text += `\n${'─'.repeat(30)}`;
+            text += `\nTotal: ${generatedTransferCodes.length} codes`;
+
+            navigator.clipboard.writeText(text);
+            showToast(`Copied ${generatedTransferCodes.length} codes! 🎁`);
+        }
+
+        function clearTransferCodes() {
+            generatedTransferCodes = [];
+            renderTransferCodes();
+            showToast("Cleared generated codes list");
+        }
+
+        // Render keys
+        function renderKeys() {
+            const now = Date.now();
+            const tbody = document.getElementById("keysBody");
+
+            if (keysData.length === 0) {
+                tbody.innerHTML = `
+                < tr >
+                <td colspan="5">
+                    <div class="empty-state">
+                        <div class="empty-icon">🔑</div>
+                        <p>No keys yet. Create your first key above!</p>
+                    </div>
+                </td>
+                    </tr >
+                `;
+            } else {
+                tbody.innerHTML = keysData.sort((a, b) => b.created - a.created).map(k => {
+                    let st, sc;
+                    if (k.status === "suspended") {
+                        st = "Suspended"; sc = "status-suspended";
+                    } else if (k.expires < now) {
+                        st = "Expired"; sc = "status-expired";
+                    } else {
+                        st = "Active"; sc = "status-active";
+                    }
+
+                    const days = Math.ceil((k.expires - now) / 86400000);
+                    const expText = days > 3650 ? "Lifetime" : `${days} days`;
+                    const hwidIcon = k.hwid ? '<span class="hwid-icon" title="HWID Bound">🔒</span>' : '';
+
+                    return `
+                < tr >
+                            <td>
+                                <span class="key-code">
+                                    ${k.key}
+                                    <button class="btn btn-ghost btn-icon" onclick="copyKey('${k.key}')" title="Copy">
+                                        📋
+                                    </button>
+                                </span>
+                            </td>
+                            <td><span class="status-badge ${sc}">${st}</span></td>
+                            <td>${expText}</td>
+                            <td>${k.notes || '-'}${hwidIcon}</td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-ghost btn-icon" onclick="toggleSuspend('${k.key}')" title="${k.status === 'suspended' ? 'Activate' : 'Suspend'}">
+                                        ${k.status === "suspended" ? "▶️" : "⏸️"}
+                                    </button>
+                                    <button class="btn btn-ghost btn-icon" onclick="extendKey('${k.key}')" title="Extend">➕</button>
+                                    <button class="btn btn-ghost btn-icon" onclick="reduceKey('${k.key}')" title="Reduce">➖</button>
+                                    <button class="btn btn-ghost btn-icon" onclick="resetHwid('${k.key}')" title="Reset HWID">🔓</button>
+                                    <button class="btn btn-ghost btn-icon" onclick="deleteKey('${k.key}')" title="Delete">🗑️</button>
+                                </div>
+                            </td>
+                        </tr >
+                    `;
+                }).join("");
+            }
+
+            // Update stats
+            const active = keysData.filter(k => k.status !== "suspended" && k.expires >= now).length;
+            const suspended = keysData.filter(k => k.status === "suspended").length;
+            document.getElementById("statTotal").textContent = keysData.length;
+            document.getElementById("statActive").textContent = active;
+            document.getElementById("statSuspended").textContent = suspended;
+            document.getElementById("statExpired").textContent = keysData.length - active - suspended;
+        }
+
+        // Enter key to login
+        document.getElementById("password").addEventListener("keypress", e => {
+            if (e.key === "Enter") login();
+        });
+    </script>
+</body>
+
+</html>
